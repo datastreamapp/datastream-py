@@ -9,11 +9,27 @@
   DataStream.org API helper. See <a href="https://github.com/datastreamapp/api-docs/tree/main/docs">API documentation</a> for query string values and structure.
 </p>
 
+## Requirements
+
+- Python 3.9+
+
 ## Install
 
+### Using CLI
+
 ```sh
-pip install datastream-py
+pip install git+https://github.com/datastreamapp/datastream-py
 ```
+
+### Using requirements.txt
+
+Add the following to your `requirements.txt` file:
+
+```
+datastream-py @ git+https://github.com/datastreamapp/datastream-py@main
+```
+
+Then, run `pip install -r requirements.txt`
 
 ## Usage
 
