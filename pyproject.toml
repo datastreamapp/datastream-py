@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ['datastream_py']
+
+[project]
+name = "datastream-py"
+version = "0.0.1"
+description = "DataStream API helper"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "requests>=2.31,<3"
+]
