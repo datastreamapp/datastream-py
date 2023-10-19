@@ -5,9 +5,15 @@
   <br/>
   <br/>
 </h1>
-<p align="center">
-  DataStream.org API helper. See <a href="https://github.com/datastreamapp/api-docs/tree/main/docs">API documentation</a> for query string values and structure.
-</p>
+
+This package is useful for those who want to extract large volumes of data from
+DataStream's [Public API](https://github.com/datastreamapp/api-docs/tree/main/docs).
+
+See [Usage](#usage) to learn how to use this package.
+
+> Note: DataStream's Custom Download tool is another option that allows users to download csv data from across datasets
+> in a particular DataStream hub using basic filters. This tool has fewer filtering options than the API, but works well
+> for basic searches. You can find it via 'Explore Data' in the header menu from any DataStream regional hub.
 
 ## Requirements
 
@@ -40,6 +46,11 @@ Available methods:
 - `locations`
 - `observations`
 - `records`
+
+All methods except `set_api_key` returns
+a [generator object that is iterable](https://docs.python.org/3/glossary.html#term-generator-iterator).
+
+See [API documentation](https://github.com/datastreamapp/api-docs/tree/main/docs) for query string values and structure.
 
 ### Locations
 
@@ -88,4 +99,22 @@ results = list(metadata({
 }))
 
 print(results)
+```
+
+### Get Result Count
+
+Pass `$count` as `true` to get the count of results.
+See [URL parameters](https://github.com/datastreamapp/api-docs#url-parameters) for more details.
+
+```python
+from datastream_py import set_api_key, observations
+
+set_api_key('xxxxxxxxxx')
+
+count = observations({
+    '$filter': "DOI eq '10.25976/xxxx-xx00'",
+    '$count': 'true'
+})
+
+print(count)
 ```
