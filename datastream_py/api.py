@@ -17,19 +17,41 @@ def set_api_key(key: str):
 
 
 def metadata(params: dict):
-    return _fetch(path='/v1/odata/v4/Metadata', params=params)
+    path = '/v1/odata/v4/Metadata'
+    response = _fetch(path, params)
+
+    if _is_count_request(params):
+        return next(response)
+    else:
+        return response
 
 
 def locations(params: dict):
-    return _fetch(path='/v1/odata/v4/Locations', params=params)
+    path = '/v1/odata/v4/Locations'
+    response = _fetch(path, params)
+
+    if _is_count_request(params):
+        return next(response)
+    else:
+        return response
 
 
 def observations(params: dict):
-    return _partition_request(path='/v1/odata/v4/Observations', params=params)
+    path = '/v1/odata/v4/Observations'
+
+    if _is_count_request(params):
+        return next(_fetch(path, params))
+    else:
+        return _partition_request(path, params)
 
 
 def records(params: dict):
-    return _partition_request(path='/v1/odata/v4/Records', params=params)
+    path = '/v1/odata/v4/Records'
+
+    if _is_count_request(params):
+        return next(_fetch(path, params))
+    else:
+        return _partition_request(path, params)
 
 
 def _request(url, params=None):
@@ -38,7 +60,8 @@ def _request(url, params=None):
     res = request(method='GET',
                   url=url,
                   params=params,
-                  headers=_request_headers)
+                  headers=_request_headers,
+                  timeout=60)
 
     if res.status_code == 429:
         # too many requests, try again with rate limiting
@@ -60,9 +83,12 @@ def _fetch(path, params):
         prefetch = None
         next_link = response.get('@odata.nextLink', None)
 
-        data = response.get('value', [])
-        for item in data:
-            yield item
+        data = response.get('value', None)
+        if isinstance(data, list):
+            for item in data:
+                yield item
+        else:
+            yield data
 
 
 def _partition_request(path, params):
@@ -83,12 +109,14 @@ def _partition_request(path, params):
             yield from _fetch(path, params)
 
 
+def _is_count_request(params):
+    return params.get('$count', 'false') == 'true'
+
+
 def _rate_limit():
     global _rate_limit_timestamp
 
     if time() < _rate_limit_timestamp:
-        # print(f'rate limiting; current: {time()}; next: {_rate_limit_timestamp};'
-        #       f' sleeping for {_rate_limit_seconds} seconds')
         sleep(_rate_limit_seconds)
 
     _rate_limit_timestamp = time() + _rate_limit_seconds
