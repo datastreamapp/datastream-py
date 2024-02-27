@@ -47,12 +47,13 @@ Available methods:
 - `observations`
 - `records`
 
-All methods except `set_api_key` returns
-a [generator object that is iterable](https://docs.python.org/3/glossary.html#term-generator-iterator).
-
 See [API documentation](https://github.com/datastreamapp/api-docs/tree/main/docs) for query string values and structure.
 
 ### Locations
+
+Returns a [generator object that is iterable](https://docs.python.org/3/glossary.html#term-generator-iterator).
+
+#### Get Locations from a dataset
 
 ```python
 from datastream_py import set_api_key, locations
@@ -69,7 +70,47 @@ for location in results:
     print(location)
 ```
 
+#### Get Locations from multiple datasets
+
+```python
+from datastream_py import set_api_key, locations
+
+set_api_key('xxxxxxxxxx')
+
+results = locations({
+    '$select': 'Id,DOI,Name,Latitude,Longitude',
+    '$filter': "DOI in ('10.25976/xxxx-xx00', '10.25976/xxxx-xx11', '10.25976/xxxx-xx22')",
+    '$top': 10000
+})
+
+for location in results:
+    print(location)
+```
+
+### Observations
+
+Returns a [generator object that is iterable](https://docs.python.org/3/glossary.html#term-generator-iterator).
+
+#### Get `Temperature` and `pH` observations from multiple datasets
+
+```python
+from datastream_py import set_api_key, observations
+
+set_api_key('xxxxxxxxxx')
+
+results = observations({
+    '$select': 'DOI,ActivityType,ActivityMediaName,ActivityStartDate,ActivityStartTime,SampleCollectionEquipmentName,CharacteristicName,MethodSpeciation,ResultSampleFraction,ResultValue,ResultUnit,ResultValueType',
+    '$filter': "DOI in ('10.25976/xxxx-xx00', '10.25976/xxxx-xx11', '10.25976/xxxx-xx22') and CharacteristicName in ('Temperature, water', 'pH')",
+    '$top': 10000
+})
+
+for observation in results:
+    print(observation)
+```
+
 ### Records
+
+Returns a [generator object that is iterable](https://docs.python.org/3/glossary.html#term-generator-iterator).
 
 ```python
 from datastream_py import set_api_key, records
@@ -87,6 +128,8 @@ for record in results:
 ```
 
 ### Metadata
+
+Returns a [generator object that is iterable](https://docs.python.org/3/glossary.html#term-generator-iterator).
 
 ```python
 from datastream_py import set_api_key, metadata
