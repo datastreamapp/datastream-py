@@ -18,6 +18,8 @@ def set_api_key(key: str):
 
 def metadata(params: dict):
     path = '/v1/odata/v4/Metadata'
+    _default_params['$top'] = 100
+
     response = _fetch(path, params)
 
     if _is_count_request(params):
