@@ -161,3 +161,27 @@ count = observations({
 
 print(count)
 ```
+
+## Debugging
+
+### 400 Bad Request
+
+```python
+from requests import exceptions
+
+from datastream_py import set_api_key, observations
+
+set_api_key('xxxxxxxxxx')
+
+try:
+    count = observations({
+        '$filter': "DOI eq '10.25976/xxxx-xx00'",
+        '$count': 'true'
+    })
+    print(count)
+except exceptions.HTTPError as e:  # From requests package
+    print(e)
+
+    if e.response.status_code == 400:
+        print(e.response.json())
+```
