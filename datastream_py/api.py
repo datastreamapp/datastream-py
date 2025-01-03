@@ -9,7 +9,10 @@ _rate_limit_seconds = 0.5
 _rate_limit_timestamp = 0
 
 _default_params = {'$top': 10000}
-_request_headers = {'Accept': 'application/vnd.api+json'}
+_request_headers = {
+    'Accept': 'application/vnd.api+json',
+    'Accept-Encoding': 'br'
+}
 
 
 def set_api_key(key: str):

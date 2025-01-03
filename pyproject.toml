@@ -12,5 +12,5 @@ description = "DataStream API helper"
 readme = "README.md"
 requires-python = ">=3.9"
 dependencies = [
-    "requests>=2.31,<3"
+    "requests>=2.32,<3"
 ]
